@@ -3,7 +3,17 @@ import { GeminiResponse, LeadAnalysis } from '../types';
 
 let chatSession: Chat | null = null;
 
-const API_KEY = process.env.API_KEY || '';
+// Safe access to API_KEY to prevent "process is not defined" errors in strict browser environments
+const getApiKey = () => {
+  try {
+    return process.env.API_KEY || '';
+  } catch (e) {
+    console.warn("API Key environment variable not accessible directly.");
+    return '';
+  }
+};
+
+const API_KEY = getApiKey();
 
 // O prompt agora instrui a IA a agir como um classificador de dados oculto
 const SYSTEM_INSTRUCTION = `
@@ -114,7 +124,7 @@ Meu nome é *${data.name}*.
   
 Gostaria de saber se posso agendar uma análise.`;
 
-  // USAR WA.ME PARA MELHOR COMPATIBILIDADE COM DESKTOP APP E WEB
+  // Usar wa.me garante que tanto Web quanto Desktop App abram corretamente
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 };
 
