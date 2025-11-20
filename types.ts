@@ -35,10 +35,16 @@ export interface ChatMessage {
   isError?: boolean;
 }
 
-export interface LeadData {
-  name?: string;
-  situation?: string;
-  phone?: string;
-  email?: string;
-  urgency?: string;
+// Estrutura de dados retornada pela IA
+export interface LeadAnalysis {
+  name: string;
+  summary: string; // Resumo do caso para o Dr. Reinaldo
+  urgency: 'Alta' | 'Média' | 'Baixa';
+  qualified: boolean; // True = Trabalhista/Previdenciário | False = Outras áreas/Curioso
+  reason: string; // Por que qualificou ou desqualificou
+}
+
+export interface GeminiResponse {
+  text: string;
+  analysis?: LeadAnalysis;
 }

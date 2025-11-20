@@ -1,34 +1,45 @@
-import { GoogleGenAI, ChatSession, GenerativeModel } from "@google/genai";
-import { ChatMessage } from '../types';
+import { GoogleGenAI, Chat } from "@google/genai";
+import { GeminiResponse, LeadAnalysis } from '../types';
 
-let chatSession: ChatSession | null = null;
-let model: GenerativeModel | null = null;
+let chatSession: Chat | null = null;
 
 const API_KEY = process.env.API_KEY || '';
 
+// O prompt agora instrui a IA a agir como um classificador de dados oculto
 const SYSTEM_INSTRUCTION = `
-Você é o assistente virtual jurídico do escritório do Dr. Reinaldo Pereira. 
-Seu objetivo é realizar uma triagem inicial (qualificação) de clientes potenciais de forma empática, profissional e persuasiva.
+Você é a Inteligência Artificial de triagem do escritório do Dr. Reinaldo Pereira.
+O Dr. Reinaldo é especialista EXCLUSIVO em: Direito Trabalhista e Previdenciário.
 
-O Dr. Reinaldo é especialista em:
-- Direito Trabalhista (foco principal)
-- Direito Previdenciário
-- Direito Penal
+SEU OBJETIVO:
+Dialogar com o cliente para extrair 3 informações chave:
+1. Nome do cliente.
+2. Resumo do problema (O que aconteceu? Foi demitido? Acidente? INSS?).
+3. Urgência (Está sem receber? Passando necessidade? Prazo vencendo?).
 
-REGRAS DE COMPORTAMENTO:
-1. Seja cordial e profissional. Use uma linguagem acessível, mas que transmita autoridade.
-2. Não dê conselhos jurídicos específicos ou garanta resultados. Diga que apenas o Dr. Reinaldo pode analisar o caso detalhadamente.
-3. Seu objetivo principal é coletar informações para encaminhar para o WhatsApp.
-4. Tente manter as respostas curtas (máximo 2 parágrafos).
+REGRAS DE INTERAÇÃO:
+- Seja empático e profissional.
+- Faça UMA pergunta por vez. Não interrogue o cliente.
+- Se o cliente falar de Direito de Família (divórcio, pensão), Criminal ou Cível, explique educadamente que o escritório não atua nessas áreas e encerre o atendimento.
 
-FLUXO DA CONVERSA:
-1. Se o usuário disser "Olá" ou começar a conversa, apresente-se e pergunte o nome.
-2. Após o nome, pergunte brevemente qual é o problema (ex: demissão, acidente, horas extras).
-3. Demonstre empatia pelo problema e pergunte se a pessoa ainda está trabalhando na empresa ou se já saiu.
-4. Pergunte se a situação é urgente.
-5. Ao final, baseando-se na gravidade, convide fortemente o usuário a clicar no botão de WhatsApp que aparecerá na tela para falar diretamente com o Dr. Reinaldo.
+PROTOCOLO DE ANÁLISE DE DADOS (CRÍTICO):
+Ao final de TODA resposta sua, você deve analisar mentalmente se já possui as informações (Nome + Problema + Urgência) OU se já identificou que o cliente NÃO é qualificado (área errada).
 
-Se o usuário perguntar algo fora do contexto jurídico/trabalhista, redirecione gentilmente de volta para os serviços do escritório.
+Se você tiver essas informações, você DEVE adicionar ao final da sua resposta um bloco JSON oculto estritamente neste formato:
+
+[[LEAD_DATA: {
+  "name": "Nome do Cliente",
+  "summary": "Resumo curto do caso em 1 frase para o advogado ler no WhatsApp",
+  "urgency": "Alta/Média/Baixa",
+  "qualified": true/false,
+  "reason": "Explicação breve da qualificação"
+}]]
+
+EXEMPLOS:
+- Caso Trabalhista (Qualificado): "qualified": true
+- Caso Divórcio (Não Qualificado): "qualified": false, "reason": "Cliente procura advogado de família"
+- Apenas "Oi" (Incompleto): NÃO envie o bloco JSON ainda. Continue conversando.
+
+IMPORTANTE: O bloco [[LEAD_DATA...]] deve ser a ÚLTIMA coisa da sua mensagem.
 `;
 
 export const initializeChat = async (): Promise<void> => {
@@ -39,7 +50,6 @@ export const initializeChat = async (): Promise<void> => {
 
   try {
     const ai = new GoogleGenAI({ apiKey: API_KEY });
-    // Using gemini-3-pro-preview for high quality conversational ability
     chatSession = ai.chats.create({
       model: 'gemini-3-pro-preview',
       config: {
@@ -52,26 +62,75 @@ export const initializeChat = async (): Promise<void> => {
   }
 };
 
-export const sendMessageToGemini = async (message: string): Promise<string> => {
+export const sendMessageToGemini = async (message: string): Promise<GeminiResponse> => {
   if (!chatSession) {
     await initializeChat();
   }
 
   if (!chatSession) {
-    return "Desculpe, estou tendo dificuldades para conectar ao servidor no momento. Por favor, utilize o botão do WhatsApp para contato direto.";
+    return { text: "Erro de conexão. Por favor, recarregue a página." };
   }
 
   try {
     const result = await chatSession.sendMessage({ message });
-    return result.text || "Não consegui processar sua resposta. Tente novamente.";
+    const fullText = result.text || "";
+
+    // Lógica de Parsing para extrair o JSON oculto
+    const jsonMatch = fullText.match(/\[\[LEAD_DATA:([\s\S]*?)\]\]/);
+    
+    let cleanText = fullText;
+    let analysisData: LeadAnalysis | undefined;
+
+    if (jsonMatch && jsonMatch[1]) {
+      try {
+        // Remove o JSON da mensagem visível para o usuário
+        cleanText = fullText.replace(jsonMatch[0], '').trim();
+        // Faz o parse dos dados
+        analysisData = JSON.parse(jsonMatch[1]);
+      } catch (e) {
+        console.error("Erro ao processar dados do lead:", e);
+      }
+    }
+
+    return { 
+      text: cleanText, 
+      analysis: analysisData 
+    };
+
   } catch (error) {
     console.error("Error sending message to Gemini:", error);
-    return "Ocorreu um erro momentâneo. Por favor, tente novamente ou contate-nos via WhatsApp.";
+    return { text: "Ocorreu um erro momentâneo. Tente novamente." };
   }
 };
 
-export const generateWhatsAppLink = (data: { name?: string, summary?: string }) => {
-  const phone = "5573999999999"; // Replace with real number
-  const text = `Olá Dr. Reinaldo, vim pelo site. Meu nome é ${data.name || 'Cliente'} e gostaria de uma análise do meu caso sobre: ${data.summary || 'Direitos Trabalhistas'}.`;
+export const generateWhatsAppLink = (data: LeadAnalysis) => {
+  const phone = "557398349560";
+  
+  // Mensagem pré-formatada "humanizada" baseada na análise da IA
+  const text = `Olá Dr. Reinaldo. Vim pelo site.
+Meu nome é *${data.name}*.
+*Situação:* ${data.summary}.
+*Urgência:* ${data.urgency}.
+  
+Gostaria de saber se posso agendar uma análise.`;
+
+  // USAR WA.ME PARA MELHOR COMPATIBILIDADE COM DESKTOP APP E WEB
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+};
+
+// Simulação de envio de e-mail para leads desqualificados
+export const sendUnqualifiedLeadReport = async (data: LeadAnalysis, chatHistory: string) => {
+  // Em um cenário real, aqui usaríamos EmailJS ou uma API de backend
+  console.log(`
+    [EMAIL SIMULADO] Para: kaykysilva01.crf@gmail.com
+    Assunto: Lead Desqualificado/Dúvida - ${data.name}
+    
+    Motivo: ${data.reason}
+    Resumo: ${data.summary}
+    
+    -- Histórico --
+    ${chatHistory}
+  `);
+  
+  return true;
 };

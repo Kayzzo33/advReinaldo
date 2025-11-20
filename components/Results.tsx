@@ -30,7 +30,7 @@ const AnimatedCounter = ({ end, suffix }: { end: number, suffix: string }) => {
   }, [isVisible, end]);
 
   return (
-    <div ref={ref} className="font-serif text-5xl md:text-6xl font-bold text-white mb-2">
+    <div ref={ref} className="font-sans text-5xl md:text-6xl font-bold text-white mb-2">
       {count}{suffix}
     </div>
   );
@@ -59,7 +59,7 @@ export const Results: React.FC = () => {
           </div>
           <div className="flex flex-col items-center">
             <div className="flex items-baseline">
-              <span className="font-serif text-5xl md:text-6xl font-bold text-white mb-2">R$</span>
+              <span className="font-sans text-5xl md:text-6xl font-bold text-white mb-2">R$</span>
               <AnimatedCounter end={2} suffix=".5M+" />
             </div>
             <p className="text-amber-500 font-medium uppercase tracking-widest text-sm mt-2">Recuperados</p>

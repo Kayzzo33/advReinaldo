@@ -25,7 +25,7 @@ export const Contact: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-sm text-slate-500 uppercase font-bold">Ligue Agora</p>
-                  <p className="text-white text-lg">(73) 99999-9999</p>
+                  <p className="text-white text-lg">(73) 9834-9560</p>
                 </div>
               </div>
 
@@ -51,7 +51,7 @@ export const Contact: React.FC = () => {
             </div>
 
             <a 
-              href="https://wa.me/5573999999999" 
+              href="https://wa.me/557398349560?text=Ol%C3%A1%2C%20vim%20do%20site%20e%20gostaria%20de%20agendar%20uma%20consulta" 
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center w-full sm:w-auto gap-2 bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-green-600/20 transform hover:-translate-y-1"

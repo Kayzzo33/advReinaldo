@@ -14,9 +14,9 @@ export const About: React.FC = () => {
           <div className={`relative transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
             <div className="absolute -inset-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl rotate-3 opacity-20 blur-lg"></div>
             <div className="relative rounded-2xl overflow-hidden border border-slate-700 shadow-2xl">
-              {/* Placeholder image as requested */}
+              {/* Updated image as requested */}
               <img 
-                src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&h=1000&fit=crop&q=80" 
+                src="https://res.cloudinary.com/dxhlvrach/image/upload/v1763658815/gemini-cleaned-8z1xy36_yoqlcb.png" 
                 alt="Dr. Reinaldo Pereira" 
                 className="w-full h-[600px] object-cover hover:scale-105 transition-transform duration-700"
               />

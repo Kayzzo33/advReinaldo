@@ -17,7 +17,7 @@ export const Footer: React.FC = () => {
               Advocacia trabalhista especializada em defender quem constrói o país. Ética, transparência e combatividade em cada processo.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-slate-400 hover:text-amber-500 transition-colors"><Instagram className="w-5 h-5" /></a>
+              <a href="https://www.instagram.com/advogadoreinaldopereira?igsh=ZjV5aThwbXR6cXFt" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-amber-500 transition-colors"><Instagram className="w-5 h-5" /></a>
               <a href="#" className="text-slate-400 hover:text-amber-500 transition-colors"><Facebook className="w-5 h-5" /></a>
               <a href="#" className="text-slate-400 hover:text-amber-500 transition-colors"><Linkedin className="w-5 h-5" /></a>
             </div>
@@ -47,7 +47,7 @@ export const Footer: React.FC = () => {
 
         <div className="border-t border-slate-900 pt-8 text-center">
           <p className="text-slate-600 text-xs">
-            &copy; {new Date().getFullYear()} Dr. Reinaldo Pereira. Todos os direitos reservados.
+            &copy; {new Date().getFullYear()} <a href="https://www.instagram.com/advogadoreinaldopereira?igsh=ZjV5aThwbXR6cXFt" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">Dr. Reinaldo Pereira</a>. Todos os direitos reservados. | Desenvolvido por <a href="https://www.instagram.com/onzy.company" target="_blank" rel="noopener noreferrer" className="hover:text-purple-500 transition-colors">Onzy Company</a>
           </p>
         </div>
       </div>
