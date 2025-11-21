@@ -149,7 +149,7 @@ export const Hero: React.FC = () => {
                     >
                         <Scale className="h-4 w-4 text-amber-500" />
                         <span className="text-sm text-slate-300 tracking-wide uppercase font-semibold">
-                            Dr. Reinaldo Pereira | Advogado Trabalhista
+                            Defesa Estratégica de Direitos
                         </span>
                     </motion.div>
 
@@ -181,8 +181,7 @@ export const Hero: React.FC = () => {
                         animate="visible"
                     >
                         <p className="text-base sm:text-lg md:text-xl text-slate-400 mb-8 leading-relaxed font-light tracking-wide max-w-2xl mx-auto px-4">
-                            Especialista em recuperar verbas rescisórias, horas extras não pagas e reversão de demissões injustas. 
-                            Atendimento humanizado com resultados comprovados.
+                            Especialista em Direito do Trabalho e Previdenciário. Atuação estratégica e humanizada para garantir o que é seu por direito.
                         </p>
                     </motion.div>
 

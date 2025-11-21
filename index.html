@@ -5,22 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dr. Reinaldo Pereira | Advogado Trabalhista</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         darkMode: 'class',
         theme: {
           extend: {
             fontFamily: {
-              serif: ['"Playfair Display"', 'serif'],
-              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+              serif: ['Arial', 'serif'],
+              sans: ['Arial', 'sans-serif'],
             },
             colors: {
               amber: {
-                450: '#F59E0B',
-                550: '#D97706',
+                300: '#F2D882', // Pale Gold
+                400: '#E5C55D', // Light Gold
+                450: '#D4AF37', // Alias for main gold
+                500: '#D4AF37', // METALLIC GOLD (Base)
+                550: '#B08D26', // Darker Gold alias
+                600: '#B08D26', // Dark Gold
+                700: '#8F721D', // Deep Gold
               },
               slate: {
                 850: '#151e2e',
@@ -71,14 +73,14 @@
   "imports": {
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
     "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.0/client",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
     "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
     "framer-motion": "https://aistudiocdn.com/framer-motion@^11.13.1",
     "motion/react": "https://aistudiocdn.com/framer-motion@^11.13.1",
     "clsx": "https://aistudiocdn.com/clsx@^2.1.1",
-    "tailwind-merge": "https://aistudiocdn.com/tailwind-merge@^2.5.5"
+    "tailwind-merge": "https://aistudiocdn.com/tailwind-merge@^2.5.5",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
   }
 }
 </script>

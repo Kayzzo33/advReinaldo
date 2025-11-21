@@ -3,18 +3,6 @@ import { GeminiResponse, LeadAnalysis } from '../types';
 
 let chatSession: Chat | null = null;
 
-// Safe access to API_KEY to prevent "process is not defined" errors in strict browser environments
-const getApiKey = () => {
-  try {
-    return process.env.API_KEY || '';
-  } catch (e) {
-    console.warn("API Key environment variable not accessible directly.");
-    return '';
-  }
-};
-
-const API_KEY = getApiKey();
-
 // O prompt agora instrui a IA a agir como um classificador de dados oculto
 const SYSTEM_INSTRUCTION = `
 Você é a Inteligência Artificial de triagem do escritório do Dr. Reinaldo Pereira.
@@ -53,13 +41,13 @@ IMPORTANTE: O bloco [[LEAD_DATA...]] deve ser a ÚLTIMA coisa da sua mensagem.
 `;
 
 export const initializeChat = async (): Promise<void> => {
-  if (!API_KEY) {
+  if (!process.env.API_KEY) {
     console.error("API Key is missing");
     return;
   }
 
   try {
-    const ai = new GoogleGenAI({ apiKey: API_KEY });
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     chatSession = ai.chats.create({
       model: 'gemini-3-pro-preview',
       config: {

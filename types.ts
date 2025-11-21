@@ -28,23 +28,22 @@ export interface StatItem {
   icon: ReactNode;
 }
 
-export interface ChatMessage {
-  id: string;
-  role: 'user' | 'model' | 'system';
-  text: string;
-  isError?: boolean;
-}
-
-// Estrutura de dados retornada pela IA
 export interface LeadAnalysis {
   name: string;
-  summary: string; // Resumo do caso para o Dr. Reinaldo
-  urgency: 'Alta' | 'Média' | 'Baixa';
-  qualified: boolean; // True = Trabalhista/Previdenciário | False = Outras áreas/Curioso
-  reason: string; // Por que qualificou ou desqualificou
+  summary: string;
+  urgency: string;
+  qualified: boolean;
+  reason?: string;
 }
 
 export interface GeminiResponse {
   text: string;
   analysis?: LeadAnalysis;
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'model' | 'system';
+  text: string;
+  isError?: boolean;
 }
